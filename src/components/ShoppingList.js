@@ -77,10 +77,10 @@ export default class ShoppingList extends React.Component {
     onAfterSaveCell(row, cellName, cellValue) {
         // alert(`Save cell ${cellName} with value ${cellValue}`);
         if (cellName ==='number_of_units' ){
-            row.total_price = cellValue * row.price;
-            console.log(row);
+            row.total_price = parseInt(parseInt(cellValue) * parseInt(row.price));
+            // console.log(row);
         }else if (cellName ==='price') {
-            row.total_price = cellValue * row.number_of_units;
+            row.total_price = parseInt(parseInt(cellValue) * parseInt(row.number_of_units));
         }
         // let rowStr = '';
         // for (const prop in row) {
@@ -92,21 +92,34 @@ export default class ShoppingList extends React.Component {
         console.log("rooooooooooowwwwww",row);
         
         const oldPruducts = this.state.products;
-        for(var product in oldPruducts){
-            if(product.id===row.id){
-                if(cellName ==='number_of_units'||cellName ==='price'){
-                    product[cellName]=parseInt(cellValue,10);
-                }else{
-                    product[cellName]=cellValue;
-                }
-                
-            }
+        console.log("ddddddddddddddddddddddddddddddddddddd")
+        if( cellName ==='price'){
+            row.price=parseInt(cellValue);
+        }else if(cellName ==='number_of_units' ){
+            row.number_of_units=parseInt(cellValue);
+            console.log(row.number_of_units);
         }
+        // }else{
+        //     product[cellName]=cellValue;
+        // }
+        // row.price=parseInt(cellValue,10);
+        // for(var product in oldPruducts){
+
+        //     if(product.id===row.id){
+
+        //         if(cellName ==='number_of_units' || cellName ==='price'){
+        //             product[cellName]=parseInt(cellValue,10);
+        //         }else{
+        //             product[cellName]=cellValue;
+        //         }
+                
+        //     }
+        // }
         // oldPruducts.push(row);
         this.setState({
             products: oldPruducts
         });
-        console.log("old",oldPruducts);
+        console.log("old",this.state.products);
     }
 
     handleDeleteButtonClick = (onClick,row) => {
