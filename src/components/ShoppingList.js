@@ -47,12 +47,16 @@ export default class ShoppingList extends React.Component {
         this.onDeleteRow = this.onDeleteRow.bind(this);
         this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
         this.onBeforeSaveCell = this.onBeforeSaveCell.bind(this);
-
+        this.addItem = this.addItem.bind(this);
 
     }
-    isNumeric(num){
-        return !isNaN(num)
-      }
+    addItem(row){
+        const oldPruducts = this.state.products;
+        oldPruducts.push(row);
+        this.setState({
+            products: oldPruducts
+        });
+    }
 
     onBeforeSaveCell(row, cellName, cellValue) {
         // You can do any validation on here for editing value,
@@ -77,49 +81,26 @@ export default class ShoppingList extends React.Component {
     onAfterSaveCell(row, cellName, cellValue) {
         // alert(`Save cell ${cellName} with value ${cellValue}`);
         if (cellName ==='number_of_units' ){
-            row.total_price = parseInt(parseInt(cellValue) * parseInt(row.price));
-            // console.log(row);
+            row.total_price = parseInt(parseInt(cellValue,10) * parseInt(row.price,10), 10);
         }else if (cellName ==='price') {
-            row.total_price = parseInt(parseInt(cellValue) * parseInt(row.number_of_units));
+            row.total_price = parseInt(parseInt(cellValue, 10) * parseInt(row.number_of_units,10), 10);
         }
         // let rowStr = '';
         // for (const prop in row) {
         //   rowStr += prop + ': ' + row[prop] + '\n';
         // }
       
-        // alert('Thw whole row :\n' + rowStr);
-        // console.log("dddddddddd",this.state.products)
-        console.log("rooooooooooowwwwww",row);
-        
+        // alert('Thw whole row :\n' + rowStr);        
         const oldPruducts = this.state.products;
-        console.log("ddddddddddddddddddddddddddddddddddddd")
         if( cellName ==='price'){
-            row.price=parseInt(cellValue);
+            row.price=parseInt(cellValue, 10);
         }else if(cellName ==='number_of_units' ){
-            row.number_of_units=parseInt(cellValue);
+            row.number_of_units=parseInt(cellValue, 10);
             console.log(row.number_of_units);
         }
-        // }else{
-        //     product[cellName]=cellValue;
-        // }
-        // row.price=parseInt(cellValue,10);
-        // for(var product in oldPruducts){
-
-        //     if(product.id===row.id){
-
-        //         if(cellName ==='number_of_units' || cellName ==='price'){
-        //             product[cellName]=parseInt(cellValue,10);
-        //         }else{
-        //             product[cellName]=cellValue;
-        //         }
-                
-        //     }
-        // }
-        // oldPruducts.push(row);
         this.setState({
             products: oldPruducts
         });
-        console.log("old",this.state.products);
     }
 
     handleDeleteButtonClick = (onClick,row) => {
@@ -158,31 +139,8 @@ export default class ShoppingList extends React.Component {
                 newPruducts.push(prudact);
             } 
         });
-
-               
-
-        // console.log("sssososososo",rows);
-        // let idx =0;
-        // this.state.products.forEach((product) => {
-            
-        //     // console.log("this.state.products[product]", this.state.products[1])
-        //     if(!(idx in rows)){
-        //         console.log(idx);
-        //         newPruducts.push(product);
-        //     }
-        //     // for (var i=0;i< rows.length;i++){
-        //     //     // console.log("r",rows[i]);
-        //     //     if(idx !== rows[i]){
-        //     //         newPruducts.push(product);
-        //     //         idx++;
-        //     //         continue;
-        //     //     }
-        //     //     // console.log("sssososososo",product);
-        //     // }
-        //     idx=idx+1;
-        // });
-   
-        console.log("newPruducts",newPruducts);
+  
+        // console.log("newPruducts",newPruducts);
         this.setState({
             products: newPruducts
         });
@@ -193,7 +151,7 @@ export default class ShoppingList extends React.Component {
         if(row.name===''||row.number_of_units===''||row.price===''){
             return ;
         }
-        console.log(row);
+        // console.log(row);
         // this.setState ={
         //     products
         // }
@@ -202,7 +160,8 @@ export default class ShoppingList extends React.Component {
         return (
           <MyCustomBody columns={ columns }
             validateState={ validateState }
-            ignoreEditable={ ignoreEditable }/>
+            ignoreEditable={ ignoreEditable }
+            addItem={this.addItem}/>
         );
     }
     render() {
@@ -218,14 +177,13 @@ export default class ShoppingList extends React.Component {
           };
         const options = {
             // onAddRow: this.onAddRow,
-            // beforeInsertRow: this.handleBeforeInsertedRow,
             onDeleteRow: this.onDeleteRow,
             insertModalBody: this.createCustomModalBody,
             deleteBtn: this.createCustomDeleteButton,
             afterInsertRow: this.handleInsertedRow, 
           };
         return (
-            <BootstrapTable data={products} cellEdit={cellEditProp} deleteRow selectRow={selectRow} insertRow multiColumnSearch={ true } options={ options }>
+            <BootstrapTable data={products} cellEdit={cellEditProp} deleteRow selectRow={selectRow} insertRow  options={ options } search>
                 <TableHeaderColumn dataField='id' isKey>Product ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='name' >Product Name</TableHeaderColumn>
                 <TableHeaderColumn dataField='number_of_units'>Number Of Units</TableHeaderColumn>

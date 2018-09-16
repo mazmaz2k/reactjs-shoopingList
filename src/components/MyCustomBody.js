@@ -14,20 +14,16 @@ export class MyCustomBody extends Component {
             newRow[column.field] =Math.floor( min + Math.random() * (max - min));
         }
         else if(column.name==="Total Product Price"){
-            // console.log("ggggggg",column.field);
             newRow[column.field] = this.refs['price'].value *this.refs['number_of_units'].value ;
         }else{
             newRow[column.field] = this.refs[column.field].value;
 
         }
-        // if(this.refs[column.field].value==='')
-        // {
-        //     return null;
-        // }
       }, this);
       if(newRow.name===''||newRow.number_of_units===''||newRow.price==='' || isNaN(newRow.price)||isNaN(newRow.number_of_units)){
             return null ;
         }
+        this.props.addItem(newRow);
       return newRow;
     }
   
@@ -35,19 +31,17 @@ export class MyCustomBody extends Component {
       const { columns, validateState } = this.props;
       return (
         <div className='modal-body'>
-          <h2 style={ { color: 'red' } }>Custom body</h2>
+          {/* <h2 style={ { color: 'red' } }>Custom body</h2> */}
           <div>
             {
               this.props.columns.map((column, i) => {
-                var editable_1=0;
                 // console.log(column);
                 if(column.name==="Total Product Price" || column.name==="Product ID" ){
-                    // const hiddenOnInsert = true;
-                    return;
+                    return null;
                 }
                 const {
-                  editable ,
-                  format,
+                //   editable ,
+                //   format,
                   field,
                   name,
                   hiddenOnInsert
@@ -68,7 +62,7 @@ export class MyCustomBody extends Component {
                   null;
                 return (
                   <div className='form-group' key={ field }>
-                    <label>{ name }</label>
+                    <label style={{"padding": '5px'}}> { name }:    </label>
                     <input ref={ field } type='text' defaultValue={ '' } />
                     { error }
                   </div>
