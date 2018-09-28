@@ -1,5 +1,6 @@
-import React from "react";
-import ShoppingList from "./ShoppingList"
+import React, { Component } from 'react';
+import fire from './Fire';
+import ShoppingList from './ShoppingList';
 
 
 function getProducts() {
@@ -19,26 +20,35 @@ function getProducts() {
       });
     }
     return products;
-  }
+}
 
-export default class Home extends React.Component {
-
-
-
-    constructor(props){
+class Home extends Component {
+    constructor(props) {
         super(props);
+        this.logout = this.logout.bind(this);
         this.products = getProducts();
         // console.log(this.products);
         this.state = {
             data: this.products,
         }
     }
+
+
+    logout() {
+        fire.auth().signOut();
+    }
+
     render() {
-        // console.log(this.state.data);
         return (
-            <div>
+            <div >
+                {/* <h1>Welcome to Home</h1> */}
                 <ShoppingList pruductArray={this.state.data}/>
+                <button onClick={this.logout}   className="btn btn-primary">Logout</button>
             </div>
         );
+
     }
+
 }
+
+export default Home;
